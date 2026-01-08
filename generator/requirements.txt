@@ -1,0 +1,4 @@
+# Transaction Generator Dependencies
+kafka-python==2.0.2
+prometheus-client==0.20.0
+python-dotenv==1.0.1
