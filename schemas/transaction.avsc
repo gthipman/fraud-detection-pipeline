@@ -1,0 +1,163 @@
+{
+  "type": "record",
+  "name": "Transaction",
+  "namespace": "com.fraudpipeline.events",
+  "doc": "Real-time transaction event for ASEAN payment systems (PromptPay, QRIS, GCash, PayNow, KHQR)",
+  "fields": [
+    {
+      "name": "transaction_id",
+      "type": "string",
+      "doc": "Unique transaction identifier (UUID format)"
+    },
+    {
+      "name": "user_id",
+      "type": "string",
+      "doc": "Account holder identifier"
+    },
+    {
+      "name": "amount",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 2
+      },
+      "doc": "Transaction amount (supports micro-transactions for financial inclusion)"
+    },
+    {
+      "name": "currency",
+      "type": {
+        "type": "enum",
+        "name": "Currency",
+        "symbols": ["THB", "IDR", "PHP", "SGD", "USD", "KHR", "MYR", "VND"]
+      },
+      "doc": "ISO 4217 currency code (ASEAN + USD for remittances)"
+    },
+    {
+      "name": "payment_rail",
+      "type": {
+        "type": "enum",
+        "name": "PaymentRail",
+        "symbols": [
+          "PROMPTPAY",
+          "QRIS", 
+          "GCASH",
+          "PAYMAYA",
+          "PAYNOW",
+          "KHQR",
+          "DUITNOW",
+          "CARD",
+          "BANK_TRANSFER",
+          "WALLET_TRANSFER"
+        ]
+      },
+      "doc": "Payment rail/network used for transaction"
+    },
+    {
+      "name": "transaction_type",
+      "type": {
+        "type": "enum",
+        "name": "TransactionType",
+        "symbols": [
+          "PAYMENT",
+          "P2P_TRANSFER",
+          "MERCHANT_PAYMENT",
+          "BILL_PAYMENT",
+          "TOP_UP",
+          "WITHDRAWAL",
+          "REMITTANCE",
+          "QR_PAYMENT"
+        ]
+      },
+      "doc": "Type of transaction"
+    },
+    {
+      "name": "merchant_id",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Merchant identifier (null for P2P transfers)"
+    },
+    {
+      "name": "merchant_category_code",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "MCC code for merchant transactions"
+    },
+    {
+      "name": "device_id",
+      "type": "string",
+      "doc": "Device fingerprint identifier"
+    },
+    {
+      "name": "device_type",
+      "type": {
+        "type": "enum",
+        "name": "DeviceType",
+        "symbols": ["MOBILE_APP", "WEB", "POS", "ATM", "API"]
+      },
+      "doc": "Channel/device type"
+    },
+    {
+      "name": "ip_address",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "IPv4/IPv6 address (masked for privacy)"
+    },
+    {
+      "name": "latitude",
+      "type": ["null", "double"],
+      "default": null,
+      "doc": "GPS latitude (if available)"
+    },
+    {
+      "name": "longitude",
+      "type": ["null", "double"],
+      "default": null,
+      "doc": "GPS longitude (if available)"
+    },
+    {
+      "name": "country_code",
+      "type": "string",
+      "doc": "ISO 3166-1 alpha-2 country code"
+    },
+    {
+      "name": "recipient_id",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Recipient account ID (for transfers/remittances)"
+    },
+    {
+      "name": "recipient_country",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Recipient country (for cross-border detection)"
+    },
+    {
+      "name": "is_first_device_txn",
+      "type": "boolean",
+      "default": false,
+      "doc": "True if this is the first transaction from this device"
+    },
+    {
+      "name": "account_age_days",
+      "type": "int",
+      "doc": "Days since account was created (for thin-file users)"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      },
+      "doc": "Transaction timestamp in milliseconds since epoch"
+    },
+    {
+      "name": "event_time",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      },
+      "doc": "Event time for Flink watermarking"
+    }
+  ]
+}

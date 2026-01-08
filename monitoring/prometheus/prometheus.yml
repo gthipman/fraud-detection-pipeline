@@ -1,0 +1,48 @@
+# Prometheus Configuration for Fraud Detection Pipeline
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# Alerting rules (to be expanded)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Rule files (to be added)
+rule_files: []
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Flink JobManager metrics
+  - job_name: 'flink-jobmanager'
+    static_configs:
+      - targets: ['flink-jobmanager:8081']
+    metrics_path: /metrics
+
+  # Flink TaskManager metrics (when exposed)
+  - job_name: 'flink-taskmanager'
+    static_configs:
+      - targets: ['flink-taskmanager:8081']
+    metrics_path: /metrics
+
+  # Redpanda metrics
+  - job_name: 'redpanda'
+    static_configs:
+      - targets: ['redpanda:9644']
+    metrics_path: /public_metrics
+
+  # Redis metrics (requires redis_exporter sidecar - to be added)
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
+
+  # Custom fraud pipeline metrics (from Python generator/scorer)
+  - job_name: 'fraud-pipeline'
+    static_configs:
+      - targets: ['host.docker.internal:9091']
+    metrics_path: /metrics

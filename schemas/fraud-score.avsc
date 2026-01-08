@@ -1,0 +1,82 @@
+{
+  "type": "record",
+  "name": "FraudScore",
+  "namespace": "com.fraudpipeline.events",
+  "doc": "Fraud scoring result with ML features and rule triggers",
+  "fields": [
+    {
+      "name": "transaction_id",
+      "type": "string",
+      "doc": "Original transaction ID"
+    },
+    {
+      "name": "user_id",
+      "type": "string"
+    },
+    {
+      "name": "fraud_score",
+      "type": "double",
+      "doc": "ML model probability score [0.0 - 1.0]"
+    },
+    {
+      "name": "risk_level",
+      "type": {
+        "type": "enum",
+        "name": "RiskLevel",
+        "symbols": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+      },
+      "doc": "Categorical risk level"
+    },
+    {
+      "name": "decision",
+      "type": {
+        "type": "enum",
+        "name": "Decision",
+        "symbols": ["APPROVE", "REVIEW", "DECLINE", "CHALLENGE"]
+      },
+      "doc": "Recommended action"
+    },
+    {
+      "name": "rules_triggered",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "doc": "List of fraud rules that fired"
+    },
+    {
+      "name": "features",
+      "type": {
+        "type": "record",
+        "name": "Features",
+        "fields": [
+          {"name": "txn_count_1h", "type": "int", "doc": "Transaction count in last hour"},
+          {"name": "txn_amount_avg_7d", "type": "double", "doc": "7-day rolling average amount"},
+          {"name": "unique_merchants_24h", "type": "int", "doc": "Unique merchants in 24h"},
+          {"name": "time_since_last_txn_sec", "type": "long", "doc": "Seconds since previous txn"},
+          {"name": "device_age_days", "type": "int", "doc": "Days since device first seen"},
+          {"name": "cross_border_ratio_30d", "type": "double", "doc": "Cross-border txn ratio"}
+        ]
+      },
+      "doc": "Real-time computed features"
+    },
+    {
+      "name": "processing_latency_ms",
+      "type": "long",
+      "doc": "End-to-end processing time in milliseconds"
+    },
+    {
+      "name": "model_version",
+      "type": "string",
+      "doc": "ML model version used for scoring"
+    },
+    {
+      "name": "scored_at",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      },
+      "doc": "Timestamp when score was generated"
+    }
+  ]
+}
